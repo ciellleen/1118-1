@@ -1,0 +1,349 @@
+# 구조체란?
+
+구조체는 여러 **자료형**을 가진 변수들을 **하나의 묶음**으로 정의하는 사용자 정의 데이터 타입을 의미.
+
+배열과 비슷한 개념으로 보면되지만 다양한 자료형을 하나의 단위로 묶을 수 있다는 점이 차이점임.
+
+```c
+struct 구조체이름 
+{
+    자료형 변수명;
+    자료형 변수명;
+};
+```
+
+**배열과의 차이**: 배열은 같은 자료형의 집합이고, 구조체는 서로 다른 자료형을 포함 가능.
+
+---
+
+# 구조체의 정의, 선언, 초기화
+
+구조체는 ‘struct’ 키워드를 사용하여 정의할 수 있다.
+
+아래의 예시는 학생의 학번, 이름, 학점을 하나의 단위로 묶어 새로운 자료형으로 정의하여 student라는 이름의 구조체를 선언한 것임.
+
+<aside>
+💡
+
+strust = 키워드
+
+student = 구조체의 이름(태그)
+
+int number, char name[10], grade = 구조체의 멤버
+
+</aside>
+
+```c
+# include <stdio.h>
+
+struct student
+{
+	int nember;
+	char name[10];
+	double grade;
+};
+
+int main(void)
+{
+	struct student s1 = {20210000, "kim", 4.5};
+	return 0;
+}
+```
+
+! 주의할 점은, 구조체 선언은 변수 선언이 아님.
+
+main() 함수 내에서 s1이라는 변수를 선언해야, 구조체 변수가 선언된 것
+
+위의 예시에서 구조체 멤버 변수 s1이 선언되고, 중괄호 안에 각 구조체 멤버에 대한 값들이 초기화 되었음.
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+struct student
+{
+	int number;
+	char name[10];
+	double grade;
+}s1;
+
+int main(void)
+{
+	s1.number = 20210000;
+	strcpy_s(s1.name, 10, "kim");
+	s1.grade = 4.5;
+	
+	return 0;
+}
+```
+
+<aside>
+💡
+
+위의 예시에서는 구조체 선언과 구조체 변수의 선언이 동시에 선언되었음.
+
+전체 소스 파일에서 이 변수를 사용할 수 있음,
+
+이후 main() 함수 내에서는 구조체의 각 멤버 변수들이 멤버 연산자(.)을 이용해 값이 대입되었음.
+
+이를, 구조체의 멤버를 참조한다고 부름.
+
+</aside>
+
+멤버가 문자열인 경우에는 문자열 처리 라이브러리 함수 strcpy_s()를 사용해서 문자열을 저장함.
+
+- **구조체 선언**:
+    
+    ```c
+    struct scor{
+        int scoreKOR;
+        int scoreMAT;
+        int scoreENG;
+        int scoreSCI;
+    };
+    
+    ```
+    
+- **구조체 변수 생성 및 초기화**:
+    
+    ```c
+    struct score a;
+    a.scoreKOR = 100; 
+    struct score b = {100, 90, 85, 80};
+    ```
+    
+- **구조체 배열**:
+    - 여러 구조체 변수를 배열 형태로 선언 가능.
+        
+        ```c
+        struct score a[10];
+        a[0].scoreKOR = 100; 
+        
+        ```
+        
+
+---
+
+## 직접 입력받아 구조체 멤버에 대입하는 경우
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+struct student
+{
+	int number;
+	char name[10];
+	double grade;
+}s1;
+
+int main(void)
+{
+	printf("학번: ");
+	scanf_s("%d", &s1.number);
+
+	printf("이름: ");
+	scanf_s("%s", s1.name, 10);
+
+	printf("학점: ");
+	scanf_s("%lf", &s1.grade);
+
+	printf("\n학번: %d \n이름: %s\n학점: %f\n\n", s1.number, s1.name, s1.grade);
+	return 0;
+}
+```
+
+---
+
+# 구조체 변수의 대입과 비교
+
+- 대입: ‘=’ 연산자를 이용해 하나의 구조체를 또 다른 구조체에 대입할 수 있음.
+- 비교: 구조체 변수와 구조체 변수를 서로 비교하는 것은 불가능함. 각 구조체 멤버마다 비교 수식을 적어주어야 함.
+
+```c
+#include <stdio.h>
+
+struct point 
+{
+	int x, y;
+};
+
+int main(void)
+{
+
+	struct point p1 = { 10,20 };
+	struct point p2 = { 10,10 };
+	struct point p3 = p1; 
+
+	printf("p3의 좌표 : %d %d\n", p3.x, p3.y);
+
+	if (p1.x == p2.x && p1.y == p2.y)
+		printf("p1과 p2의 좌표는 같습니다.\n");
+	else
+		printf("p1과 p2의 좌표는 다릅니다.\n");
+	return 0;
+}
+```
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/43f4c680-a7ab-4f2d-b233-d37ec40472ce/1d4541c5-99fb-4873-bcd3-b71520881d9b/image.png)
+
+정수형 변수 x, y를 멤버로 갖는 point 구조체를 선언하였음.
+
+구조체 변수 p1과 p2는 각각 초기화를 해주었고, p3에는 p1을 대입하였다.
+
+p1과 p2를 비교할 때에는, 각 멤버 변수들이 값마다 비교 수식을 사용해 줌.
+
+p3의 각 멤버 변수는 p1의 변수의 값으로 대입된 것을 확인할 수 잇고, p1과 p2의 좌표를 비교한 결과 서로 같지 않은 변수임을 확인할 수 있음.
+
+---
+
+# 구조체 내의 구조체(구조체 중첩)
+
+구조체를 다른 구조체 안에 중첩하여 포함시킬 수 있음.
+
+아래는 x, y 좌표를 나타내는 두 변수를 포함한 point 구조체가 각각 사각형의 왼쪽 상단 좌표, 오른쪽 하단 좌표를 의미하며 rect 구조체 안에 중첩되어 있는 예시임.
+
+각 좌표를 입력받아 면적과 둘레를 구하는 프로그램임.
+
+```c
+#include <stdio.h>
+struct point 
+{
+int x, y;
+};
+
+struct rect 
+{
+	struct point p1, p2;
+};
+
+int main(void) 
+{
+
+	struct rect r; 
+	int width, height, area, peri; 
+
+	printf("왼쪽 상단의 좌표: ");
+	scanf_s("%d %d", &r.p1.x, &r.p1.y);
+
+	printf("오른쪽 하단의 좌표: ");
+	scanf_s("%d %d", &r.p2.x, &r.p2.y);
+
+	width = r.p2.x - r.p1.x;
+	height = r.p1.y - r.p2.y;
+	area = width * height;
+	peri = 2 * (width + height);
+
+	printf("면적: %d\n둘레: %d\n", area, peri);
+
+	return 0;
+}
+```
+
+<aside>
+💡
+
+멤버 참조 연산자를 두 번 사용하여 중첩되어 있는 구조체의 멤버를 참조할 수 있음.
+
+</aside>
+
+---
+
+# **typedef를 이용한 구조체 정의**
+
+- `typedef`로 구조체를 간단히 정의.
+    
+    ```c
+    c
+    코드 복사
+    typedef struct _score {
+        int scoreKOR;
+        int scoreMAT;
+        int scoreENG;
+        int scoreSCI;
+    } SCORE;
+    
+    SCORE a; // struct 키워드 없이 사용 가능
+    
+    ```
+    
+
+---
+
+# **성적 관리 프로그램에 구조체 적용**
+
+1. **구조체 정의**:
+    
+    ```c
+    typedef struct _student 
+    {
+        char name[20];
+        int scoreKOR;
+        int scoreMAT;
+        int scoreENG;
+        int scoreSCI;
+        char *comment; 
+    } STUDENT;
+    
+    STUDENT student[20]; 
+    
+    ```
+    
+2. **입력 함수**:
+    - 학생 정보를 입력받아 구조체 배열에 저장.
+        
+        ```c
+        int inputGrade(int index)
+        {
+            printf("이름을 입력하세요: ");
+            scanf_s("%s", student[index].name, sizeof(student[index].name));
+            printf("국어점수를 입력하세요: ");
+            scanf_s("%d", &student[index].scoreKOR);
+            ...
+            return 0;
+        }
+        
+        ```
+        
+3. **계산 함수**:
+    - 점수 총합과 평균 계산.
+        
+        ```c
+        int calcGrade(int index, int *scoreTotal, float *scoreAverage, char *grade) 
+        {
+            *scoreTotal = student[index].scoreKOR + student[index].scoreMAT + ...;
+            *scoreAverage = (float)(*scoreTotal) / 4;
+            if (*scoreAverage >= 90) *grade = 'A';
+            ...
+            return 0;
+        }
+        
+        ```
+        
+4. **출력 함수**:
+    - 학생 정보를 화면에 출력.
+        
+        ```c
+        int outputGrade(int index)
+        {
+            int scoreTotal;
+            float scoreAverage;
+            char grade;
+            calcGrade(index, &scoreTotal, &scoreAverage, &grade);
+            printf("%s\t%d\t%.1f\t%s\n", student[index].name, scoreTotal, scoreAverage, student[index].comment);
+            return 0;
+        }
+        
+        ```
+        
+5. **메모리 해제**:
+    - 동적 메모리로 할당한 평가 내용을 메인 함수 종료 시 해제.
+        
+        ```c
+        while(index) 
+        {
+            index--;
+            free(student[index].comment);
+        }
+        
+        ```
